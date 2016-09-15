@@ -16,15 +16,23 @@ public class Cuenta {
     
      private long Nucuenta;
     private long Nuidentificacion;
-    private long Sactual;
-    private long Ianual;
+    private double Sactual;
+    
 
-    public Cuenta(long Nucuenta, long Nuidentificacion, long Sactual, long Ianual) {
+    public Cuenta(long Nucuenta, long Nuidentificacion, double Sactual) {
         this.Nucuenta = Nucuenta;
         this.Nuidentificacion = Nuidentificacion;
         this.Sactual = Sactual;
-        this.Ianual = Ianual;
+       
     }
+    
+    public Cuenta(long Nucuenta, long Nuidentificacion) {
+        this.Nucuenta = Nucuenta;
+        this.Nuidentificacion = Nuidentificacion;
+        this.Sactual = 0;
+       
+    }
+
 
     public long getNucuenta() {
         return Nucuenta;
@@ -34,12 +42,8 @@ public class Cuenta {
         return Nuidentificacion;
     }
 
-    public long getSactual() {
+    public double getSactual() {
         return Sactual;
-    }
-
-    public long getIanual() {
-        return Ianual;
     }
 
     public void setNucuenta(long Nucuenta) {
@@ -50,68 +54,47 @@ public class Cuenta {
         this.Nuidentificacion = Nuidentificacion;
     }
 
-    public void setSactual(long Sactual) {
+    public void setSactual(double Sactual) {
         this.Sactual = Sactual;
     }
-
-    public void setIanual(long Ianual) {
-        this.Ianual = Ianual;
-    }
     
-    public long ActualizarSaldo() {
-        long res;
-        res = this.Sactual + (this.Ianual / 365);
-        this.Sactual=res;
-        return this.Sactual;
+    
+
+    
+
+    
+    
+    public void ActualizarSaldo(double ianual) {
+        double aux,res;
+        aux= this.getSactual()*(ianual/365);
+        res = this.getSactual() + aux;
+        this.setSactual(res);
     }
-    public long Ingresar() {
-        long auxiliar;
-        long ns;
-        boolean au=true;
-        int res1, sw;
-
-        do {
-            sw = 1;
-
-            try {
-                auxiliar = Long.parseLong(JOptionPane.showInputDialog(null, "Digite el total a ingresar"));
-                
-                    ns = auxiliar + this.Sactual;
-                    this.Sactual = ns;
-
-            } catch (NumberFormatException e) {
-                res1 = JOptionPane.showConfirmDialog(null, "¿Desea salir?", "Salir", JOptionPane.YES_NO_OPTION);
-                if (res1 == 0) {
-                    au=false;
-                    sw = 1;
-                } else {
-                    sw = 0;
-                }
-            }
-            } while (sw == 0);
+    public void Ingresar(double ingreso) {
+        double auxiliar;
+        auxiliar=this.getSactual()+ingreso;
+        this.setSactual(auxiliar);
         
-        return this.Sactual;
-
 }
-public long Retirar(){
-        long auxiliar;
-        long ns;
-        int res;
-        if (this.Sactual == 0) {
-            JOptionPane.showMessageDialog(null, "Usted no tiene saldo");
-        }
-        auxiliar = Long.parseLong(JOptionPane.showInputDialog( "Digite el total que desea retirar"));
-        while (auxiliar > this.Sactual) {
-            auxiliar = Long.parseLong(JOptionPane.showInputDialog( "Debe tener una cantidad validad para retirar, ingrese su saldo nuevamente"));
-        }
-        res = JOptionPane.showConfirmDialog(null, "¿Seguro que desea retirar esta cantidad?: " + auxiliar   , "Pregunta", JOptionPane.YES_NO_OPTION);
-        if (res == 0) {
-            ns = this.Sactual- auxiliar;
-            this.Sactual= (ns);
-            
-
-        }
-        return this.Sactual;
+public void Retirar(double egreso){
+        double auxi;
+        auxi= this.getSactual()- egreso;
+        this.setSactual(auxi);
+       
+}public String mostrar(){
+       String aux;
+       aux = "No. de la cuenta: "+this.getNucuenta()+"\n"
+           + "No. de Identificación: "+this.getNuidentificacion()+"\n"
+           + "Saldo Actual: "+this.getSactual();
+        return aux;
+              
+     
+   }
+public String renovar(){
+      String auxi;
+      auxi =""+this.getSactual();
+      return auxi;
     }
-
+  
 }
+

@@ -17,7 +17,7 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
-    Cuenta c;
+    
     public Principal() {
         initComponents();
         cmdGuardar.setEnabled(true);
@@ -205,7 +205,7 @@ public class Principal extends javax.swing.JFrame {
         });
         jPanel4.add(cmdSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 130, 30));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 180, 310));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, 180, 310));
 
         jPanel3.setBackground(new java.awt.Color(51, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Resultantes"));
@@ -221,7 +221,7 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 340, 140));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 310, 360, 170));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 360, 170));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -257,7 +257,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNumeroCuentaActionPerformed
 
     private void cmdBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBorrarActionPerformed
-        c = null;
+        Cuenta c;
         txtResultado.setText("");
         txtInteresAnual.setText("");
         txtNumeroCuenta.setText("");
@@ -275,28 +275,24 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdBorrarActionPerformed
 
     private void cmdGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGuardarActionPerformed
-        long numerocuenta, identificacion, saldoa, interes;
         if (txtNumeroCuenta.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese el número de  su cuenta");
             txtNumeroCuenta.requestFocusInWindow();
-
-        } else if (txtIdentificacionCliente.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el número de identificacion");
+        } else if (Integer.parseInt(txtIdentificacionCliente.getText().trim()) == 0) {
+            JOptionPane.showMessageDialog(this, "El número de Identificación del cliente no puede ser cero", "error", JOptionPane.ERROR_MESSAGE);
             txtIdentificacionCliente.requestFocusInWindow();
+            txtIdentificacionCliente.selectAll();
         } else if (txtSaldoActual.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese su saldo actual");
+            JOptionPane.showMessageDialog(this, "Ingrese su saldo actual,si su cuenta   no tiene saldo por favor ingrese 0");
             txtSaldoActual.requestFocusInWindow();
         } else if (txtInteresAnual.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese el interes anual");
             txtInteresAnual.requestFocusInWindow();
         } else {
 
-            numerocuenta = Long.parseLong(txtNumeroCuenta.getText());
-            identificacion = Long.parseLong(txtIdentificacionCliente.getText());
-            saldoa = Long.parseLong(txtSaldoActual.getText());
-            interes = Long.parseLong(txtInteresAnual.getText());
+            
 
-            c = new Cuenta(numerocuenta, identificacion, saldoa, interes);
+            
             JOptionPane.showMessageDialog(this, "Guardado exitosamente");
             cmdGuardar.setEnabled(false);
             cmdIngresar.setEnabled(true);
@@ -311,9 +307,20 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdGuardarActionPerformed
 
     private void cmdActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarActionPerformed
-        long aux;
-        aux = c.ActualizarSaldo();
-        txtResultado.append("\nSu saldo se ha actualizado a: " + aux + "\n");
+        Cuenta c;
+       
+        int cuenta,identi;
+        double saldo,interes,actualizado;
+        cuenta = Integer.parseInt(txtNumeroCuenta.getText());
+        identi = Integer.parseInt(txtIdentificacionCliente.getText());
+        saldo = Double.parseDouble(txtSaldoActual.getText());
+        actualizado=Double.parseDouble(txtInteresAnual.getText());
+        c = new Cuenta(cuenta, identi, saldo);
+                JOptionPane.showMessageDialog(this, "Saldo actualizado correctamente");
+                c.ActualizarSaldo(actualizado);
+                txtSaldoActual.setText(c.renovar()); 
+                txtResultado.setText(c.mostrar());
+        
         cmdGuardar.setEnabled(false);
         cmdIngresar.setEnabled(true);
         cmdActualizar.setEnabled(false);
@@ -322,14 +329,23 @@ public class Principal extends javax.swing.JFrame {
         cmdMostrar.setEnabled(false);
         cmdSalir.setEnabled(false);
 
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_cmdActualizarActionPerformed
 
     private void cmdRetirarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRetirarActionPerformed
-        long auxiliar;
-        auxiliar=c.Retirar();
-        txtResultado.append("Su saldo actual es :" +auxiliar+ "\n");
-
+        Cuenta c;
+        int cuenta,identi;
+        double retir,saldo;
+        cuenta = Integer.parseInt(txtNumeroCuenta .getText());
+           identi = Integer.parseInt(txtIdentificacionCliente.getText());
+           saldo = Double.parseDouble(txtSaldoActual.getText());
+        c = new Cuenta(cuenta, identi, saldo);
+         retir = Double.parseDouble(JOptionPane.showInputDialog(this, "Digite dinero a retirar"));
+         if(retir>saldo){
+             JOptionPane.showMessageDialog(this,"Saldo insuficiente, no se puede hacer el retiro","error",JOptionPane.ERROR_MESSAGE);
+         }else{               
+          c.Retirar(retir);
+          txtResultado.append("\nSu saldo se ha actualizado a: " + retir+ "\n");
         cmdGuardar.setEnabled(false);
         cmdIngresar.setEnabled(true);
         cmdActualizar.setEnabled(true);
@@ -337,14 +353,23 @@ public class Principal extends javax.swing.JFrame {
         cmdBorrar.setEnabled(true);
         cmdMostrar.setEnabled(true);
         cmdSalir.setEnabled(true);
-        //}
-        // TODO add your handling code here:
+        }
+        
     }//GEN-LAST:event_cmdRetirarActionPerformed
 
     private void cmdIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdIngresarActionPerformed
-        long aux;
-        aux = c.Ingresar();
-        txtResultado.append("Su saldo actual es: " + aux + "\n");
+        Cuenta c;
+        int cuent,identi;
+        double ingresos,saldo,saldonuevo;
+        
+         cuent = Integer.parseInt(txtNumeroCuenta.getText());
+        identi = Integer.parseInt(txtIdentificacionCliente.getText());
+        saldo = Double.parseDouble(txtSaldoActual.getText());
+        c = new Cuenta(cuent, identi, saldo);
+        ingresos = Double.parseDouble(JOptionPane.showInputDialog(this, "Dinero a ingresar en la cuenta"));
+                        c.Ingresar(ingresos);
+                    txtSaldoActual.setText(c.renovar());     
+                txtResultado.setText(c.mostrar());
         cmdGuardar.setEnabled(false);
         cmdIngresar.setEnabled(true);
         cmdActualizar.setEnabled(true);
@@ -352,14 +377,20 @@ public class Principal extends javax.swing.JFrame {
         cmdBorrar.setEnabled(true);
         cmdMostrar.setEnabled(true);
         cmdSalir.setEnabled(true);
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_cmdIngresarActionPerformed
 
     private void cmdMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMostrarActionPerformed
-        txtResultado.append("El numero de la cuenta es: " + c.getNucuenta() + "\n");
-        txtResultado.append("El numero de identificacion es: " + c.getNuidentificacion() + "\n");
-        txtResultado.append("El saldo actual es: " + c.getSactual() + "\n");
-        txtResultado.append("El interes anual es: " + c.getIanual());
+        Cuenta c ;
+        int cuen,identificacion;
+        double saldo,interes,actualizado;
+        cuen = Integer.parseInt(txtNumeroCuenta.getText());
+        identificacion = Integer.parseInt(txtIdentificacionCliente.getText());
+        saldo = Double.parseDouble(txtSaldoActual.getText()); 
+        c = new Cuenta(cuen, identificacion, saldo);
+         txtSaldoActual.setText(c.renovar()); 
+         txtResultado.setText(c.mostrar()); 
+         
         cmdGuardar.setEnabled(false);
         cmdIngresar.setEnabled(true);
         cmdActualizar.setEnabled(true);
@@ -367,7 +398,7 @@ public class Principal extends javax.swing.JFrame {
         cmdBorrar.setEnabled(true);
         cmdMostrar.setEnabled(false);
         cmdSalir.setEnabled(false);
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_cmdMostrarActionPerformed
 
     private void cmdSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSalirActionPerformed
@@ -465,4 +496,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea txtResultado;
     private javax.swing.JTextField txtSaldoActual;
     // End of variables declaration//GEN-END:variables
+
+    private double getSactual() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
