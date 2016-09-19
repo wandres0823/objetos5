@@ -6,6 +6,9 @@
 package interfaz;
 
 import clase.Cuenta;
+import Excepciones.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -275,12 +278,15 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdBorrarActionPerformed
 
     private void cmdGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdGuardarActionPerformed
+        Cuenta c; 
+        long ncuenta, id;
+        double saldoa;
         if (txtNumeroCuenta.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese el número de  su cuenta");
             txtNumeroCuenta.requestFocusInWindow();
         } else if (Integer.parseInt(txtIdentificacionCliente.getText().trim()) == 0) {
-            JOptionPane.showMessageDialog(this, "El número de Identificación del cliente no puede ser cero", "error", JOptionPane.ERROR_MESSAGE);
-            txtIdentificacionCliente.requestFocusInWindow();
+            JOptionPane.showMessageDialog(this, "Ingrese el numero de identificacion");
+            txtNumeroCuenta.requestFocusInWindow();
             txtIdentificacionCliente.selectAll();
         } else if (txtSaldoActual.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese su saldo actual,si su cuenta   no tiene saldo por favor ingrese 0");
@@ -292,8 +298,21 @@ public class Principal extends javax.swing.JFrame {
 
             
 
+            ncuenta = Long.parseLong(txtNumeroCuenta.getText());
+            id = Long.parseLong(txtIdentificacionCliente .getText());
+            saldoa = Double.parseDouble(txtSaldoActual.getText());
+
+            try {
+                c = new Cuenta(ncuenta, id, saldoa);
             
-            JOptionPane.showMessageDialog(this, "Guardado exitosamente");
+            }catch(NopuedeSerCero ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                
+            }catch (NoNegativo ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            }
+                
+            
             cmdGuardar.setEnabled(false);
             cmdIngresar.setEnabled(true);
             cmdActualizar.setEnabled(false);
@@ -307,7 +326,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdGuardarActionPerformed
 
     private void cmdActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarActionPerformed
-        Cuenta c;
+        Cuenta c = null;
        
         int cuenta,identi;
         double saldo,interes,actualizado;
@@ -315,9 +334,21 @@ public class Principal extends javax.swing.JFrame {
         identi = Integer.parseInt(txtIdentificacionCliente.getText());
         saldo = Double.parseDouble(txtSaldoActual.getText());
         actualizado=Double.parseDouble(txtInteresAnual.getText());
+        try{
         c = new Cuenta(cuenta, identi, saldo);
-                JOptionPane.showMessageDialog(this, "Saldo actualizado correctamente");
-                c.ActualizarSaldo(actualizado);
+        }catch(NopuedeSerCero ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                
+            }catch (NoNegativo ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            }    
+        
+        JOptionPane.showMessageDialog(this, "Saldo actualizado correctamente");
+        try {
+            c.ActualizarSaldo(actualizado);
+        } catch (NoNegativo ex) {
+               JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
                 txtSaldoActual.setText(c.renovar()); 
                 txtResultado.setText(c.mostrar());
         
@@ -333,18 +364,29 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdActualizarActionPerformed
 
     private void cmdRetirarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRetirarActionPerformed
-        Cuenta c;
+        Cuenta c = null;
         int cuenta,identi;
         double retir,saldo;
         cuenta = Integer.parseInt(txtNumeroCuenta .getText());
            identi = Integer.parseInt(txtIdentificacionCliente.getText());
            saldo = Double.parseDouble(txtSaldoActual.getText());
-        c = new Cuenta(cuenta, identi, saldo);
-         retir = Double.parseDouble(JOptionPane.showInputDialog(this, "Digite dinero a retirar"));
+           try{
+           c = new Cuenta(cuenta, identi, saldo);
+           }catch(NopuedeSerCero ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                
+            }catch (NoNegativo ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            }
+           retir = Double.parseDouble(JOptionPane.showInputDialog(this, "Digite dinero a retirar"));
          if(retir>saldo){
              JOptionPane.showMessageDialog(this,"Saldo insuficiente, no se puede hacer el retiro","error",JOptionPane.ERROR_MESSAGE);
          }else{               
-          c.Retirar(retir);
+            try {
+                c.Retirar(retir);
+            } catch (NoNegativo ex) {
+                   JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            }
           txtResultado.append("\nSu saldo se ha actualizado a: " + retir+ "\n");
         cmdGuardar.setEnabled(false);
         cmdIngresar.setEnabled(true);
@@ -358,16 +400,27 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdRetirarActionPerformed
 
     private void cmdIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdIngresarActionPerformed
-        Cuenta c;
+        Cuenta c = null;
         int cuent,identi;
         double ingresos,saldo,saldonuevo;
         
          cuent = Integer.parseInt(txtNumeroCuenta.getText());
         identi = Integer.parseInt(txtIdentificacionCliente.getText());
         saldo = Double.parseDouble(txtSaldoActual.getText());
+        try{
         c = new Cuenta(cuent, identi, saldo);
+        }catch(NopuedeSerCero e){
+                JOptionPane.showMessageDialog(this, e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                
+            }catch (NoNegativo ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            }
         ingresos = Double.parseDouble(JOptionPane.showInputDialog(this, "Dinero a ingresar en la cuenta"));
-                        c.Ingresar(ingresos);
+        try {
+            c.Ingresar(ingresos);
+        } catch (NoNegativo ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
                     txtSaldoActual.setText(c.renovar());     
                 txtResultado.setText(c.mostrar());
         cmdGuardar.setEnabled(false);
@@ -381,14 +434,21 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdIngresarActionPerformed
 
     private void cmdMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMostrarActionPerformed
-        Cuenta c ;
+        Cuenta c = null ;
         int cuen,identificacion;
         double saldo,interes,actualizado;
         cuen = Integer.parseInt(txtNumeroCuenta.getText());
         identificacion = Integer.parseInt(txtIdentificacionCliente.getText());
         saldo = Double.parseDouble(txtSaldoActual.getText()); 
+        try{
         c = new Cuenta(cuen, identificacion, saldo);
-         txtSaldoActual.setText(c.renovar()); 
+        }catch(NopuedeSerCero ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+                
+            }catch (NoNegativo ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            } 
+        txtSaldoActual.setText(c.renovar()); 
          txtResultado.setText(c.mostrar()); 
          
         cmdGuardar.setEnabled(false);
